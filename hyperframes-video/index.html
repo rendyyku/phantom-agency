@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="id" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #080b11;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #f0f6fc;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      /* Container */
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        background: radial-gradient(circle at 50% 25%, #151d2c 0%, #07090e 100%);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 70px 60px;
+      }
+
+      /* Animated Grid Background */
+      .grid-bg {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: 
+          linear-gradient(rgba(48, 54, 61, 0.25) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(48, 54, 61, 0.25) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+      }
+
+      /* Glowing Orbs */
+      .glow-orb {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.18;
+        pointer-events: none;
+      }
+      .glow-green { background: #10b981; top: 15%; right: -100px; }
+      .glow-red { background: #ef4444; top: 35%; left: -100px; }
+      .glow-blue { background: #3b82f6; bottom: 10%; right: 10%; }
+
+      /* Top Header */
+      .header-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid rgba(48, 54, 61, 0.7);
+        padding-bottom: 24px;
+      }
+      .live-tag {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 28px;
+        color: #8b949e;
+        letter-spacing: 1px;
+      }
+      .live-dot {
+        width: 18px;
+        height: 18px;
+        background: #ef4444;
+        border-radius: 50%;
+        box-shadow: 0 0 16px #ef4444;
+      }
+      .pair-pill {
+        background: #f59e0b;
+        color: #000;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-size: 28px;
+        font-weight: 800;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+      }
+
+      /* Scene Viewport */
+      .scene-viewport {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        margin: 40px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scene {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      /* Scene 1: Hook */
+      .s1-title {
+        font-size: 82px;
+        font-weight: 900;
+        line-height: 1.15;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        text-shadow: 0 8px 30px rgba(0,0,0,0.8);
+      }
+      .radar-pulse {
+        width: 320px;
+        height: 320px;
+        border: 4px solid #3b82f6;
+        border-radius: 50%;
+        margin: 40px auto;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+      }
+      .radar-inner {
+        width: 160px;
+        height: 160px;
+        border: 3px solid #10b981;
+        border-radius: 50%;
+      }
+      .radar-line {
+        position: absolute;
+        width: 50%;
+        height: 4px;
+        background: #10b981;
+        top: 50%;
+        left: 50%;
+        transform-origin: 0 50%;
+      }
+
+      /* Scene 2: Fly 700 Pips */
+      .badge-expansion {
+        font-size: 32px;
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.15);
+        border: 2px solid #10b981;
+        padding: 8px 26px;
+        border-radius: 30px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+      .s2-title {
+        font-size: 78px;
+        font-weight: 900;
+        color: #10b981;
+        line-height: 1.1;
+      }
+      .price-card {
+        background: rgba(13, 17, 23, 0.85);
+        border: 2px solid #30363d;
+        border-radius: 24px;
+        padding: 24px 40px;
+        margin: 25px 0;
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(12px);
+      }
+      .price-val {
+        font-size: 58px;
+        font-weight: 800;
+        color: #10b981;
+      }
+
+      /* Candlestick visual */
+      .chart-container {
+        width: 90%;
+        height: 280px;
+        background: rgba(13, 17, 23, 0.7);
+        border: 2px solid #30363d;
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        position: relative;
+        margin-bottom: 25px;
+      }
+      .candle-col {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+      }
+      .c-wick {
+        width: 4px;
+        background: #8b949e;
+        position: absolute;
+      }
+      .c-body {
+        width: 80%;
+        border-radius: 4px;
+        z-index: 2;
+      }
+      .bg-green { background: #10b981; }
+      .bg-red { background: #ef4444; }
+
+      .news-banner {
+        background: rgba(22, 27, 34, 0.9);
+        border: 2px solid #ef4444;
+        border-radius: 20px;
+        padding: 22px 30px;
+        width: 90%;
+        text-align: left;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+      .news-tag {
+        color: #ef4444;
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .news-title {
+        font-size: 36px;
+        font-weight: 800;
+        color: #fff;
+      }
+      .news-desc {
+        font-size: 28px;
+        color: #8b949e;
+        margin-top: 6px;
+      }
+
+      /* Scene 3: Trap & Sentiment */
+      .s3-title {
+        font-size: 78px;
+        font-weight: 900;
+        color: #ef4444;
+        margin-bottom: 25px;
+      }
+      .trap-box {
+        background: rgba(43, 16, 22, 0.8);
+        border: 3px solid #ef4444;
+        border-radius: 24px;
+        padding: 30px;
+        width: 90%;
+        margin-bottom: 30px;
+        box-shadow: 0 0 40px rgba(239, 68, 68, 0.2);
+      }
+      .trap-sub {
+        font-size: 26px;
+        color: #ef4444;
+        font-weight: 800;
+      }
+      .trap-level {
+        font-size: 56px;
+        font-weight: 900;
+        color: #fff;
+        margin: 10px 0;
+      }
+      .card-row {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .sent-card {
+        background: rgba(22, 27, 34, 0.85);
+        border-radius: 18px;
+        padding: 24px 30px;
+        text-align: left;
+        border-left: 8px solid;
+      }
+      .card-red { border-left-color: #ef4444; }
+      .card-green { border-left-color: #10b981; }
+      .card-h { font-size: 32px; font-weight: 800; color: #fff; }
+      .card-p { font-size: 26px; color: #8b949e; margin-top: 6px; }
+
+      /* Scene 4: CTA */
+      .cta-card {
+        background: rgba(13, 17, 23, 0.95);
+        border: 3px solid #3b82f6;
+        border-radius: 36px;
+        padding: 50px 40px;
+        width: 92%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 50px rgba(59, 130, 246, 0.3);
+      }
+      .cta-brand {
+        font-size: 30px;
+        color: #3b82f6;
+        font-weight: 800;
+        letter-spacing: 2px;
+      }
+      .cta-title {
+        font-size: 68px;
+        font-weight: 900;
+        line-height: 1.15;
+        margin: 25px 0 35px;
+      }
+      .cta-points {
+        text-align: left;
+        font-size: 32px;
+        color: #c9d1d9;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 45px;
+      }
+      .cta-button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 26px;
+        border-radius: 20px;
+        font-size: 46px;
+        font-weight: 900;
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+      }
+
+      /* Caption Subtitle Box */
+      .caption-container {
+        position: absolute;
+        bottom: 80px;
+        left: 60px;
+        right: 60px;
+        z-index: 10;
+        background: rgba(7, 9, 14, 0.92);
+        border: 2px solid #3b82f6;
+        border-radius: 20px;
+        padding: 24px 30px;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      }
+      .caption-text {
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.4;
+        text-align: center;
+        color: #fff;
+      }
+
+      /* Bottom Footer */
+      .footer-bar {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: #8b949e;
+        border-top: 2px solid rgba(48, 54, 61, 0.7);
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="41.38"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="grid-bg"></div>
+      <div class="glow-orb glow-green"></div>
+      <div class="glow-orb glow-red"></div>
+      <div class="glow-orb glow-blue"></div>
+
+      <audio
+        id="a-roll-audio"
+        src="voiceover.mp3"
+        data-start="0"
+        data-duration="41.38"
+        data-track-index="2"
+        data-volume="1"
+      ></audio>
+
+      <!-- Top Header -->
+      <div class="header-bar">
+        <div class="live-tag mono">
+          <div class="live-dot"></div>
+          LIVE TERMINAL • PHANTOM AI
+        </div>
+        <div class="pair-pill mono">XAUUSD M5</div>
+      </div>
+
+      <!-- Center Scenes Viewport -->
+      <div class="scene-viewport">
+
+        <!-- SCENE 1: HOOK (0s - 6s) -->
+        <div id="scene-1" class="scene">
+          <div class="s1-title">
+            APA SIH YANG TERJADI<br>
+            <span style="color: #f59e0b;">HARI INI?</span>
+          </div>
+          <div class="radar-pulse">
+            <div class="radar-inner"></div>
+            <div id="radar-rot" class="radar-line"></div>
+          </div>
+          <div style="font-size: 40px; color: #8b949e; font-weight: 800;">
+            GOLD GIMANA, <span style="color: #ef4444;">JUNAM</span> ATAU <span style="color: #10b981;">FLY</span>?
+          </div>
+        </div>
+
+        <!-- SCENE 2: EXPANSION & NEWS (6s - 18s) -->
+        <div id="scene-2" class="scene" style="opacity: 0;">
+          <div class="badge-expansion mono">EXPANSION DETECTED</div>
+          <div class="s2-title">GOLD FLY 700 PIPS</div>
+          <div style="font-size: 34px; color: #8b949e; font-weight: 700; margin-bottom: 15px;">
+            TANPA RETRACE SAMA SEKALI
+          </div>
+
+          <div class="price-card">
+            <div class="mono" style="font-size: 32px; color: #8b949e;">PRICE PEAK:</div>
+            <div id="price-counter" class="mono price-val">$4,194.30</div>
+          </div>
+
+          <div class="chart-container">
+            <div class="candle-col">
+              <div class="c-wick" style="height: 60px; top: 180px;"></div>
+              <div class="c-body bg-red" style="height: 40px;"></div>
+            </div>
+            <div class="candle-col">
+              <div class="c-wick" style="height: 80px; top: 150px;"></div>
+              <div class="c-body bg-green" style="height: 60px;"></div>
+            </div>
+            <div class="candle-col">
+              <div class="c-wick" style="height: 70px; top: 160px;"></div>
+              <div class="c-body bg-red" style="height: 50px;"></div>
+            </div>
+            <div class="candle-col">
+              <div class="c-wick" style="height: 100px; top: 120px;"></div>
+              <div class="c-body bg-green" style="height: 80px;"></div>
+            </div>
+            <div class="candle-col">
+              <div class="c-wick" style="height: 120px; top: 90px;"></div>
+              <div class="c-body bg-green" style="height: 100px;"></div>
+            </div>
+            <!-- Huge Pumping Candle -->
+            <div class="candle-col" style="flex: 1.5;">
+              <div id="huge-wick" class="c-wick" style="height: 240px; top: 10px; background: #10b981; width: 6px;"></div>
+              <div id="huge-candle" class="c-body bg-green" style="height: 200px; width: 90%;"></div>
+            </div>
+          </div>
+
+          <div class="news-banner">
+            <div class="news-tag mono">🚨 BREAKING GEOPOLITICS</div>
+            <div class="news-title">Tensi Selat Hormuz Memanas!</div>
+            <div class="news-desc">Aliran tanker minyak drop 27%, safe-haven flow meledak.</div>
+          </div>
+        </div>
+
+        <!-- SCENE 3: JEBAKAN PUCUK (18s - 29s) -->
+        <div id="scene-3" class="scene" style="opacity: 0;">
+          <div class="s3-title">AWAS JEBAKAN PUCUK!</div>
+
+          <div class="trap-box">
+            <div class="trap-sub mono">RESISTANCE LIQUIDITY TARGET</div>
+            <div class="trap-level mono">4.198 — 4.200</div>
+            <div style="font-size: 28px; color: #c9d1d9;">Zona Likuiditas Stop Loss Menggunung</div>
+          </div>
+
+          <div class="card-row">
+            <div class="sent-card card-red">
+              <div class="card-h">❌ NICE TRY SELLER!</div>
+              <div class="card-p">Retail yang nekat pasang counter trend kesapu bersih.</div>
+            </div>
+            <div class="sent-card card-green">
+              <div class="card-h">✅ SELAMAT BUYER!</div>
+              <div class="card-p">Disiplin hold posisi dari bawah panen floating profit.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCENE 4: CTA (29s - 41.38s) -->
+        <div id="scene-4" class="scene" style="opacity: 0;">
+          <div class="cta-card">
+            <div class="cta-brand mono">PHANTOM INTELLIGENCE</div>
+            <div class="cta-title">
+              INGIN AI AGENT UNTUK<br>
+              <span style="color: #10b981;">ANALISIS REALTIME?</span>
+            </div>
+            <div class="cta-points">
+              <div>✓ Pantau likuiditas & sweep 24/7</div>
+              <div>✓ Deteksi news makro global instan</div>
+              <div>✓ Akses teknologi institusi murni data</div>
+            </div>
+            <div class="cta-button">
+              ⚡ AKSES GRATIS DI BIO
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Subtitle Box -->
+      <div class="caption-container">
+        <div id="caption" class="caption-text">
+          "Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"
+        </div>
+      </div>
+
+      <!-- Bottom Footer -->
+      <div class="footer-bar mono">
+        <div>AUTONOMOUS INSTITUTIONAL RADAR</div>
+        <div>t.me/phantomsmcid</div>
+      </div>
+    </div>
+
+    <!-- GSAP Master Animation Timeline -->
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Scene 1: Hook (0s - 6s)
+      tl.to("#radar-rot", { rotation: 720, duration: 6, ease: "none" }, 0);
+      tl.from("#scene-1 .s1-title", { scale: 0.85, opacity: 0, duration: 1.2, ease: "power4.out" }, 0);
+
+      // Transition Scene 1 -> Scene 2 (at 6.0s)
+      tl.to("#scene-1", { opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 5.5);
+      tl.call(() => {
+        document.getElementById("caption").innerText = "Gold fly 700 pips tanpa retrace semalam, langsung nyentuh 4194. Lihat tuh ada news: Tensi Selat Hormuz memanas lagi, aliran tanker minyak drop 27%.";
+      }, null, 5.8);
+
+      // Scene 2: Fly & News (6s - 18s)
+      tl.to("#scene-2", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 6.0);
+      tl.from("#huge-candle", { height: 0, duration: 2.5, ease: "power2.out" }, 6.2);
+      tl.from(".news-banner", { y: 60, opacity: 0, duration: 0.8, ease: "back.out(1.4)" }, 7.5);
+
+      // Transition Scene 2 -> Scene 3 (at 18.0s)
+      tl.to("#scene-2", { opacity: 0, scale: 0.95, duration: 0.5, ease: "power2.in" }, 17.5);
+      tl.call(() => {
+        document.getElementById("caption").innerText = "Hati-hati jebakan pucuk di area 4198 sampai 4200. Nice try seller yang nekat counter trend, selamat buyer yang hold dari bawah.";
+      }, null, 17.8);
+
+      // Scene 3: Trap (18s - 29s)
+      tl.to("#scene-3", { opacity: 1, duration: 0.6, ease: "power3.out" }, 18.0);
+      tl.from(".trap-box", { scale: 0.9, opacity: 0, duration: 0.8, ease: "elastic.out(1, 0.75)" }, 18.2);
+      tl.from(".sent-card", { x: -60, opacity: 0, stagger: 0.4, duration: 0.8, ease: "power3.out" }, 19.5);
+
+      // Transition Scene 3 -> Scene 4 (at 29.0s)
+      tl.to("#scene-3", { opacity: 0, y: 40, duration: 0.5, ease: "power2.in" }, 28.5);
+      tl.call(() => {
+        document.getElementById("caption").innerText = "Ingin AI agent untuk analisis realtime? Akses gratis di bio.";
+      }, null, 28.8);
+
+      // Scene 4: CTA (29s - 41.38s)
+      tl.to("#scene-4", { opacity: 1, duration: 0.7, ease: "power3.out" }, 29.0);
+      tl.from(".cta-card", { scale: 0.85, opacity: 0, duration: 1.0, ease: "back.out(1.5)" }, 29.2);
+      tl.from(".cta-button", { scale: 0.9, yoyo: true, repeat: 8, duration: 1.2, ease: "sine.inOut" }, 30.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
