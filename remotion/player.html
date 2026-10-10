@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phantom Agency — Video Preview (TikTok 9:16)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #090c10;
+      color: #f0f6fc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .header-bar {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #8b949e;
+    }
+    .badge-status {
+      background: #238636;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+    /* Phone 9:16 Mockup */
+    .phone-container {
+      width: 360px;
+      height: 640px;
+      background: #0d1117;
+      border: 3px solid #30363d;
+      border-radius: 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(88,166,255,0.15);
+    }
+    /* Video Canvas / Layer */
+    .video-viewport {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: radial-gradient(circle at 50% 20%, #161b22 0%, #090c10 100%);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 18px;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    /* Grid background */
+    .grid-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: linear-gradient(rgba(48,54,61,0.2) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(48,54,61,0.2) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    /* Top Ticker */
+    .top-meta {
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(48,54,61,0.6);
+      padding-bottom: 10px;
+    }
+    .pair-badge {
+      background: #f0883e;
+      color: #000;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+    }
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #f85149;
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
+
+    /* Scene Center Area */
+    .scene-body {
+      z-index: 2;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .hook-title {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      color: #fff;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.9);
+    }
+    .highlight-red { color: #f85149; }
+    .highlight-green { color: #3fb950; }
+    .highlight-yellow { color: #d29922; }
+
+    /* Animated Chart Simulation */
+    .chart-box {
+      width: 100%;
+      height: 160px;
+      background: rgba(22, 27, 34, 0.8);
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      position: relative;
+      margin: 12px 0;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px;
+      gap: 5px;
+    }
+    .candle {
+      flex: 1;
+      border-radius: 2px;
+      position: relative;
+      transition: height 0.3s ease;
+    }
+    .c-green { background: #3fb950; }
+    .c-red { background: #f85149; }
+
+    .price-tag {
+      position: absolute;
+      right: 12px;
+      top: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: #58a6ff;
+    }
+
+    /* Subtitle Caption Area */
+    .caption-box {
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid #58a6ff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.4;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+      margin-top: 10px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom CTA */
+    .bottom-cta {
+      z-index: 2;
+      background: linear-gradient(135deg, #1f6feb 0%, #238636 100%);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(31,111,235,0.4);
+    }
+
+    /* Timeline Controls */
+    .controls {
+      width: 100%;
+      max-width: 360px;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #21262d;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #58a6ff;
+      transition: width 0.1s linear;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-play { background: #238636; color: #fff; }
+    .btn-acc { background: #1f6feb; color: #fff; }
+    .btn-rev { background: #21262d; color: #8b949e; border: 1px solid #30363d; }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <div>AGENT 03: REMOTION ENGINE</div>
+    <div class="badge-status">RENDERED • 9:16 (1080×1920)</div>
+  </div>
+
+  <div class="phone-container">
+    <div class="video-viewport">
+      <div class="grid-overlay"></div>
+
+      <!-- Top Meta -->
+      <div class="top-meta">
+        <div><span class="live-dot"></span>LIVE TERMINAL</div>
+        <div class="pair-badge">XAUUSD M5</div>
+        <div id="time-display">00:00 / 00:38</div>
+      </div>
+
+      <!-- Center Body -->
+      <div class="scene-body">
+        <div class="hook-title" id="main-title">
+          APA SIH YANG TERJADI <span class="highlight-yellow">HARI INI?</span>
+        </div>
+
+        <div class="chart-box">
+          <div class="price-tag" id="price-tag">$4,194.30</div>
+          <div class="candle c-red" style="height: 30%"></div>
+          <div class="candle c-green" style="height: 50%"></div>
+          <div class="candle c-red" style="height: 40%"></div>
+          <div class="candle c-green" style="height: 65%"></div>
+          <div class="candle c-green" style="height: 85%"></div>
+          <div class="candle c-green" id="lead-candle" style="height: 98%"></div>
+        </div>
+
+        <div class="caption-box" id="caption-text">
+          "Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"
+        </div>
+      </div>
+
+      <!-- Bottom CTA -->
+      <div class="bottom-cta" id="cta-box">
+        ⚡ INGIN AI AGENT ANALISIS REALTIME? AKSES GRATIS DI BIO
+      </div>
+    </div>
+  </div>
+
+  <!-- Player Controls -->
+  <div class="controls">
+    <div class="progress-bar" onclick="seek(event)">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-play" onclick="togglePlay()" id="play-btn">▶ PLAY VIDEO</button>
+      <button class="btn btn-acc" onclick="alert('✅ APPROVED: Video diteruskan untuk dipublish ke TikTok @phantom_intelligence!')">✅ ACC PUBLISH</button>
+      <button class="btn btn-rev" onclick="alert('🔄 Minta revisi: Agent 03 akan re-render skrip baru.')">🔄 REVISI</button>
+    </div>
+  </div>
+
+  <script>
+    const timeline = [
+      {
+        start: 0, end: 6,
+        title: 'APA YANG TERJADI <span class="highlight-yellow">HARI INI?</span>',
+        caption: '"Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"',
+        price: '$4,194.30',
+        candleHeight: '65%'
+      },
+      {
+        start: 6, end: 18,
+        title: 'GOLD FLY <span class="highlight-green">700 PIPS</span>',
+        caption: '"Gold fly 700 pips tanpa retrace semalam langsung nyentuh 4.194. Lihat tuh ada news: Tensi Selat Hormuz memanas lagi, aliran tanker minyak drop 27%."',
+        price: '$4,194.30',
+        candleHeight: '98%'
+      },
+      {
+        start: 18, end: 28,
+        title: 'AWAS <span class="highlight-red">JEBAKAN PUCUK!</span>',
+        caption: '"Hati-hati jebakan pucuk di area 4.198 - 4.200. Nice try seller yang nekat counter trend, selamat buyer yang hold dari bawah."',
+        price: '$4,198.50',
+        candleHeight: '92%'
+      },
+      {
+        start: 28, end: 38,
+        title: 'PHANTOM <span class="highlight-green">AI AGENT</span>',
+        caption: '"Ingin AI agent untuk analisis realtime? Akses gratis di bio."',
+        price: '$4,194.30',
+        candleHeight: '80%'
+      }
+    ];
+
+    let currentTime = 0;
+    const totalDuration = 38;
+    let isPlaying = false;
+    let timer = null;
+
+    function renderFrame() {
+      const currentSegment = timeline.find(s => currentTime >= s.start && currentTime < s.end) || timeline[timeline.length - 1];
+      
+      document.getElementById('main-title').innerHTML = currentSegment.title;
+      document.getElementById('caption-text').innerText = currentSegment.caption;
+      document.getElementById('price-tag').innerText = currentSegment.price;
+      document.getElementById('lead-candle').style.height = currentSegment.candleHeight;
+
+      const progress = (currentTime / totalDuration) * 100;
+      document.getElementById('progress-fill').style.width = progress + '%';
+      
+      const mins = Math.floor(currentTime / 60).toString().padStart(2, '0');
+      const secs = (currentTime % 60).toString().padStart(2, '0');
+      document.getElementById('time-display').innerText = `${mins}:${secs} / 00:38`;
+    }
+
+    function togglePlay() {
+      if (isPlaying) {
+        clearInterval(timer);
+        isPlaying = false;
+        document.getElementById('play-btn').innerText = '▶ PLAY VIDEO';
+      } else {
+        isPlaying = true;
+        document.getElementById('play-btn').innerText = '⏸ PAUSE';
+        timer = setInterval(() => {
+          currentTime++;
+          if (currentTime > totalDuration) {
+            currentTime = 0;
+          }
+          renderFrame();
+        }, 1000);
+      }
+    }
+
+    function seek(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      currentTime = Math.floor(pos * totalDuration);
+      renderFrame();
+    }
+
+    renderFrame();
+  </script>
+</body>
+</html>
