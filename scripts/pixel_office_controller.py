@@ -13,7 +13,7 @@ import urllib.error
 TOKEN = "40f05fe0-7bde-4ea9-8ef1-e82dd8bb8b58"
 PORT = 3200
 BASE_URL = f"http://127.0.0.1:{PORT}"
-CWD = "C:/Users/phantom/Desktop/PHANTOM/phantomTD"
+CWD = "C:/Users/phantom/Desktop/PHANTOM/phantom-agency"
 
 AGENTS = [
     {
