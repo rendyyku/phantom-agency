@@ -10,17 +10,15 @@
 * **Tema:** Dark mode modern, monospace code typography, grafik chart harga animasi halus, dan visualisasi order flow.
 * **Teks:** Kontras tinggi, ukuran besar di area tengah layar (aman dari pemotong UI TikTok).
 
-## 3. Struktur Video 30-45 Detik
-1. **0 - 5 Detik (Hook Fakta):**
-   * Tampilkan fakta yang baru terjadi tanpa dramatisasi palsu.
-   * *Contoh:* "Selat Hormuz memanas semalam, dan harga emas langsung merespons dalam 15 menit."
-2. **5 - 25 Detik (Bedah Mekanisme Chart):**
-   * Animasi grafik chart menunjukkan pergerakan harga menembus level likuiditas.
-   * Jelaskan mengapa retail trader yang terburu-buru entry sering terkena pembalikan harga mendadak.
-3. **25 - 35 Detik (Solusi Objektif):**
-   * Tunjukkan cara mesin algoritma memetakan zona likuiditas sebelum pergerakan terjadi.
-4. **35 - 42 Detik (Call to Action Natural):**
-   * Ajak penonton mengecek bot analisis gratis di bio untuk melihat peta likuiditas hari ini secara mandiri.
+## 3. Struktur Video 30-45 Detik (Formula Trader Riil)
+1. **0 - 6 Detik (Hook Lapangan):**
+   * "Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"
+2. **6 - 20 Detik (Fakta Pips & Pergerakan):**
+   * "Gold fly 700 pips tanpa retrace semalam tembus 4.194. Lihat tuh ada news tensi Selat Hormuz."
+3. **20 - 32 Detik (Sentimen & Peringatan):**
+   * "Hati-hati jebakan pucuk. Nice try seller, selamat buyer yang hold dari bawah."
+4. **32 - 40 Detik (Call to Action Tanpa Jualan):**
+   * "Ingin AI agent untuk analisis realtime? Akses gratis di bio."
 
 ## 4. Gerbang Persetujuan (Approval Gateway)
 Sebelum video diunggah:

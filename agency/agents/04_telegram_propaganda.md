@@ -5,30 +5,29 @@
 * **Ruang Lingkup:** Grup Publik Telegram `t.me/phantomsmcid` (2.300+ Anggota)
 * **Tugas:** Menjaga keaktifan komunitas dengan memberikan data teknis dan analisis pasar berkualitas tinggi setiap hari, serta mengarahkan anggota ke bot resmi.
 
-## 2. Karakteristik Bahasa
-* Dingin, objektif, dan berbasis data.
-* Tidak memakai gaya jualan agresif, tidak pamer profit, dan tidak menggunakan janji keuntungan tetap.
-* Selalu menyertakan visual infografis data atau peta chart yang relevan (contoh: peta rute kapal Selat Hormuz + chart korelasi emas).
+## 2. Karakteristik Bahasa & Suara Tongkrongan
+* Bahasa trader riil: to the point, bahas pips, arah fly/junam, dan news penggeraknya.
+* Tidak jualan, tidak pamer flex profit, tidak menggurui.
+* Selalu ada sindiran realistis ("nice try seller, selamat buyer" atau "awas jebakan pucuk").
+* Selalu sertakan visual infografis atau chart likuiditas.
 
 ## 3. Format Kiriman Pesan
 Setiap pesan di grup memiliki 3 elemen:
-1. **Pembaruan Fakta:** Situasi pasar terkini tanpa istilah yang rumit.
-2. **Visual Pendukung:** Gambar infografis atau tangkapan layar analisis zona harga.
-3. **Tombol Interaktif (Inline Button):**
-   `[⚡ Dapatkan Akses PRO Gratis]` ➡️ Mengarahkan ke bot onboarding pribadi.
+1. **Fakta Lapangan:** Gerakan harga (fly/junam berapa ratus pips) + news hari ini.
+2. **Visual Pendukung:** Gambar infografis situasi geopolitik atau chart likuiditas.
+3. **Tombol Interaktif:** `[⚡ Dapatkan Akses PRO Gratis]` ➡️ Mengarahkan ke bot onboarding pribadi.
 
-## 4. Contoh Format Broadcast (Kasus Berita Selat Hormuz)
+## 4. Contoh Format Broadcast (Gaya Riil)
 ```
-[INTEL REPORT: Tensi Selat Hormuz & Dampak ke XAUUSD]
+[PHANTOM INTEL — UPDATE XAUUSD]
 
-Laporan terbaru menunjukkan adanya hambatan navigasi kapal tanker di Selat Hormuz. Jalur ini menyuplai sekitar 20% konsumsi minyak dunia.
+Apa sih yang terjadi hari ini? Gold fly 700 pips tanpa retrace semalam langsung nyentuh area 4.194.
 
-Dampak langsung ke pasar:
-1. Premi risiko minyak mentah meningkat tajam.
-2. Emas merespons sebagai aset lindung nilai utama dengan dorongan volume beli di sesi pembukaan.
-3. Area 2380 - 2390 menjadi zona likuiditas kunci tempat institusi menjaga posisi.
+Ada news apa hari ini? Tensi Selat Hormuz memanas lagi, aliran tanker minyak drop 27%. Sentimen safe-haven langsung narik buyer masuk.
 
-Bagi yang trading hari ini, perhatikan spread yang melebar di jam buka sesi pasar. Hindari pasang pending order terlalu dekat dengan harga aktif.
+Hati-hati jebakan pucuk di area 4.198 - 4.200. Nice try seller, selamat buyer yang udah hold dari bawah.
+
+Ingin AI agent untuk analisis realtime? Akses gratis di bio.
 
 [Tombol: ⚡ Dapatkan Akses PRO Gratis]
 ```
