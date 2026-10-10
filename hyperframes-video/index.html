@@ -1,479 +1,702 @@
-<!doctype html>
-<html lang="id" data-resolution="portrait">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1080, height=1920" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body {
-        width: 1080px;
-        height: 1920px;
-        overflow: hidden;
-        background: #06090e;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        color: #f1f5f9;
-      }
-      .mono { font-family: 'JetBrains Mono', monospace; }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Arial Black',  Arial, sans-serif;
+  }
+  #root {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+  #camera {
+    width: 1080px;
+    height: 1920px;
+    position: absolute;
+    top: 0; left: 0;
+    transform-origin: center center;
+  }
+  .scene {
+    width: 1080px;
+    height: 1920px;
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+  }
 
-      #root {
-        position: relative;
-        width: 1080px;
-        height: 1920px;
-        overflow: hidden;
-        background: radial-gradient(circle at 50% 25%, #0f172a 0%, #030712 100%);
-      }
+  /* ── SCENE 1 ── */
+  #scene1 {
+    opacity: 1;
+    background: radial-gradient(ellipse at 50% 40%, #0a0a2e 0%, #000010 60%, #000 100%);
+  }
+  .s1-top-label {
+    font-size: 36px;
+    color: #7b8cde;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    opacity: 0.85;
+  }
+  .s1-title {
+    font-size: 88px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+    line-height: 1.05;
+    text-shadow: 0 0 60px rgba(120,160,255,0.6), 0 4px 20px rgba(0,0,0,0.8);
+    margin-bottom: 60px;
+    padding: 0 60px;
+  }
+  .radar-wrap {
+    position: relative;
+    width: 520px;
+    height: 520px;
+    margin-bottom: 70px;
+  }
+  .radar-disc {
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,180,0.08) 0%, rgba(0,180,120,0.04) 40%, transparent 70%);
+    border: 2px solid rgba(0,255,180,0.25);
+    position: absolute;
+    top: 0; left: 0;
+  }
+  .radar-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0,255,180,0.15);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .radar-ring:nth-child(1) { width: 130px; height: 130px; }
+  .radar-ring:nth-child(2) { width: 260px; height: 260px; }
+  .radar-ring:nth-child(3) { width: 390px; height: 390px; }
+  .radar-ring:nth-child(4) { width: 510px; height: 510px; }
+  .radar-crosshair {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; height: 100%;
+  }
+  .radar-crosshair::before,
+  .radar-crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(0,255,180,0.12);
+  }
+  .radar-crosshair::before { width: 1px; height: 100%; left: 50%; top: 0; }
+  .radar-crosshair::after  { width: 100%; height: 1px; top: 50%; left: 0; }
+  .radar-sweep {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    top: 50%; left: 50%;
+    transform-origin: 0% 100%;
+    background: conic-gradient(from 0deg, transparent 70%, rgba(0,255,180,0.35) 100%);
+    border-radius: 0 260px 0 0;
+  }
+  .radar-dot {
+    position: absolute;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #00ffb4;
+    box-shadow: 0 0 20px #00ffb4, 0 0 40px rgba(0,255,180,0.5);
+  }
+  .radar-dot:nth-child(5) { top: 28%; left: 62%; }
+  .radar-dot:nth-child(6) { top: 55%; left: 22%; }
+  .radar-dot:nth-child(7) { top: 70%; left: 68%; }
+  .radar-center {
+    position: absolute;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 30px #fff, 0 0 60px rgba(255,255,255,0.4);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .versus-row {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+  }
+  .badge {
+    padding: 28px 52px;
+    border-radius: 24px;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .badge-down {
+    background: linear-gradient(135deg, #ff2244, #8b0000);
+    color: #fff;
+    border: 3px solid rgba(255,80,80,0.5);
+    box-shadow: 0 0 40px rgba(255,34,68,0.4);
+  }
+  .badge-up {
+    background: linear-gradient(135deg, #00c853, #004d20);
+    color: #fff;
+    border: 3px solid rgba(0,200,83,0.5);
+    box-shadow: 0 0 40px rgba(0,200,83,0.4);
+  }
+  .vs-text {
+    font-size: 64px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(255,255,255,0.4);
+  }
 
-      /* CAMERA WRAPPER — 60FPS SMOOTH SCALE/PAN (NO TWITCH, NO FLICKER) */
-      #camera {
-        position: absolute;
-        width: 1080px;
-        height: 1920px;
-        top: 0;
-        left: 0;
-        transform-origin: 50% 50%;
-        will-change: transform;
-      }
+  /* ── SCENE 2 ── */
+  #scene2 {
+    background: radial-gradient(ellipse at 50% 30%, #0d1a0d 0%, #050f05 50%, #000 100%);
+    justify-content: flex-start;
+    padding-top: 120px;
+  }
+  .s2-eyebrow {
+    font-size: 34px;
+    color: #00e676;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0.9;
+  }
+  .s2-title {
+    font-size: 96px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+    line-height: 1.0;
+    text-shadow: 0 0 80px rgba(0,230,118,0.5), 0 4px 20px rgba(0,0,0,0.9);
+    margin-bottom: 60px;
+    padding: 0 50px;
+  }
+  .s2-title span { color: #00e676; }
+  .chart-card {
+    width: 940px;
+    background: #0a1a0a;
+    border-radius: 28px;
+    border: 2px solid rgba(0,230,118,0.3);
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.7), 0 0 60px rgba(0,230,118,0.1);
+    position: relative;
+  }
+  .chart-card img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+  }
+  .chart-badge {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: linear-gradient(135deg, #00c853, #007a33);
+    color: #fff;
+    font-size: 42px;
+    font-weight: 900;
+    padding: 16px 36px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,200,83,0.5);
+    letter-spacing: 1px;
+  }
+  .chart-label {
+    padding: 20px 30px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 2px;
+  }
+  .news-card {
+    width: 940px;
+    background: #0f0f1a;
+    border-radius: 28px;
+    border: 2px solid rgba(255,200,0,0.3);
+    overflow: hidden;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.7), 0 0 60px rgba(255,200,0,0.08);
+    position: relative;
+  }
+  .news-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  .news-content {
+    padding: 30px 36px;
+  }
+  .news-tag {
+    display: inline-block;
+    background: #dc2626;
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+    padding: 8px 22px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+  }
+  .news-headline {
+    font-size: 38px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.3;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .news-headline span { color: #ffd740; }
 
-      .ambient-glow {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        opacity: 0.16;
-      }
-      .glow-green { width: 650px; height: 650px; background: #10b981; filter: blur(140px); top: 15%; right: -120px; }
-      .glow-red { width: 650px; height: 650px; background: #ef4444; filter: blur(140px); top: 40%; left: -120px; }
-      .glow-blue { width: 750px; height: 750px; background: #3b82f6; filter: blur(160px); bottom: 5%; right: 10%; }
+  /* ── SCENE 3 ── */
+  #scene3 {
+    background: radial-gradient(ellipse at 50% 35%, #1a0a00 0%, #0d0500 50%, #000 100%);
+    justify-content: flex-start;
+    padding-top: 110px;
+  }
+  .s3-eyebrow {
+    font-size: 34px;
+    color: #ff6d00;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .s3-title {
+    font-size: 96px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+    line-height: 1.0;
+    text-shadow: 0 0 80px rgba(255,109,0,0.5), 0 4px 20px rgba(0,0,0,0.9);
+    margin-bottom: 50px;
+    padding: 0 50px;
+  }
+  .s3-title span { color: #ff6d00; }
+  .resistance-box {
+    width: 940px;
+    background: linear-gradient(135deg, rgba(255,109,0,0.15), rgba(255,50,50,0.1));
+    border: 3px solid #ff6d00;
+    border-radius: 24px;
+    padding: 36px 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255,109,0,0.25), inset 0 0 40px rgba(255,109,0,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .resistance-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff6d00, #ff3030, #ff6d00, transparent);
+  }
+  .resistance-label {
+    font-size: 28px;
+    color: #ff9e40;
+    letter-spacing: 4px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .resistance-value {
+    font-size: 64px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(255,109,0,0.6);
+    letter-spacing: 2px;
+  }
+  .resistance-value span { color: #ff6d00; }
+  .s3-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 940px;
+  }
+  .s3-card {
+    border-radius: 24px;
+    padding: 36px 44px;
+    font-size: 40px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .s3-card-bad {
+    background: linear-gradient(135deg, rgba(200,0,0,0.25), rgba(100,0,0,0.2));
+    border: 2px solid rgba(255,50,50,0.4);
+  }
+  .s3-card-good {
+    background: linear-gradient(135deg, rgba(0,180,80,0.25), rgba(0,80,30,0.2));
+    border: 2px solid rgba(0,200,83,0.4);
+  }
+  .s3-card-icon {
+    font-size: 48px;
+    margin-right: 16px;
+  }
+  .s3-card-sub {
+    font-size: 30px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 8px;
+    font-weight: 400;
+  }
 
-      .hud-header {
-        position: absolute;
-        top: 60px;
-        left: 60px;
-        right: 60px;
-        z-index: 50;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid rgba(255,255,255,0.08);
-        padding-bottom: 22px;
-      }
-      .hud-brand {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        font-size: 26px;
-        color: #94a3b8;
-        letter-spacing: 1.2px;
-      }
-      .live-dot {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #ef4444;
-      }
-      .pair-pill {
-        background: #f59e0b;
-        color: #000;
-        padding: 8px 22px;
-        border-radius: 12px;
-        font-size: 28px;
-        font-weight: 900;
-      }
+  /* ── SCENE 4 ── */
+  #scene4 {
+    background: radial-gradient(ellipse at 50% 40%, #0a0020 0%, #050010 50%, #000 100%);
+    justify-content: flex-start;
+    padding-top: 100px;
+  }
+  .s4-brand {
+    font-size: 32px;
+    color: #9c6fff;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+  .s4-card {
+    width: 940px;
+    background: linear-gradient(160deg, #0d0025 0%, #1a0040 50%, #0d0025 100%);
+    border: 2px solid rgba(156,111,255,0.4);
+    border-radius: 36px;
+    padding: 60px 60px 50px;
+    margin-bottom: 30px;
+    box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 80px rgba(156,111,255,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .s4-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #9c6fff, #c084fc, #9c6fff, transparent);
+  }
+  .s4-card-logo {
+    font-size: 44px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 40px rgba(156,111,255,0.6);
+  }
+  .s4-card-logo span { color: #9c6fff; }
+  .s4-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(156,111,255,0.4), transparent);
+    margin: 28px 0;
+  }
+  .s4-headline {
+    font-size: 52px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  .s4-headline span { color: #c084fc; }
+  .s4-points {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .s4-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    font-size: 36px;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .s4-check {
+    color: #00e676;
+    font-size: 40px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .s4-point-text { color: rgba(255,255,255,0.9); }
+  .s4-point-text strong { color: #fff; }
+  .cta-btn {
+    width: 940px;
+    background: linear-gradient(135deg, #7c3aed, #9c6fff, #c084fc);
+    color: #fff;
+    font-size: 52px;
+    font-weight: 900;
+    text-align: center;
+    padding: 44px 60px;
+    border-radius: 28px;
+    letter-spacing: 2px;
+    box-shadow: 0 20px 60px rgba(124,58,237,0.5), 0 0 80px rgba(156,111,255,0.2);
+    transform-origin: center center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .s4-sub {
+    margin-top: 30px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    text-align: center;
+  }
 
-      .scene {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        padding-top: 200px;
-        padding-left: 60px;
-        padding-right: 60px;
-        text-align: center;
-      }
+  /* ── CAPTIONS ── */
+  #captions {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    right: 60px;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .caption-line {
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.5;
+    padding: 18px 30px;
+    border-radius: 16px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-      .hero-title {
-        font-size: 80px;
-        font-weight: 900;
-        line-height: 1.1;
-        letter-spacing: -1.5px;
-        text-transform: uppercase;
-        color: #ffffff;
-        text-shadow: 0 10px 30px rgba(0,0,0,0.8);
-      }
-      .c-gold { color: #f59e0b; }
-      .c-green { color: #10b981; }
-      .c-red { color: #ef4444; }
+  /* ── PARTICLES ── */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .s1-particles .particle {
+    background: rgba(120,160,255,0.4);
+  }
+  .s2-particles .particle {
+    background: rgba(0,230,118,0.3);
+  }
+  .s4-particles .particle {
+    background: rgba(156,111,255,0.3);
+  }
 
-      .radar-wrapper {
-        width: 300px;
-        height: 300px;
-        border: 3px solid rgba(56, 189, 248, 0.4);
-        border-radius: 50%;
-        margin: 40px 0;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
-      }
-      .radar-core {
-        width: 150px;
-        height: 150px;
-        border: 2px solid rgba(16, 185, 129, 0.5);
-        border-radius: 50%;
-      }
-      .radar-sweep {
-        position: absolute;
-        width: 50%;
-        height: 3px;
-        background: #10b981;
-        top: 50%;
-        left: 50%;
-        transform-origin: 0 50%;
-      }
-      .versus-tags {
-        display: flex;
-        gap: 24px;
-        font-size: 38px;
-        font-weight: 900;
-      }
-      .tag-j { background: rgba(239,68,68,0.15); border: 2px solid #ef4444; padding: 12px 26px; border-radius: 14px; color: #ef4444; }
-      .tag-f { background: rgba(16,185,129,0.15); border: 2px solid #10b981; padding: 12px 26px; border-radius: 14px; color: #10b981; }
+  /* ── GLOW LINES ── */
+  .glow-line {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,255,180,0.6), transparent);
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="41.38" data-width="1080" data-height="1920">
+  <audio id="a-roll-audio" src="voiceover.mp3" data-start="0" data-duration="41.38" data-track-index="2" data-volume="1"></audio>
 
-      /* Scene 2: Real Chart Shot */
-      .chart-card-real {
-        width: 920px;
-        height: 480px;
-        background: #0f172a;
-        border: 3px solid #334155;
-        border-radius: 28px;
-        overflow: hidden;
-        margin: 25px 0 20px;
-        position: relative;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-      }
-      .chart-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transform-origin: 65% 50%;
-      }
-      .chart-overlay-badge {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(15, 23, 42, 0.9);
-        border: 2px solid #10b981;
-        padding: 8px 20px;
-        border-radius: 12px;
-        font-size: 32px;
-        font-weight: 900;
-        color: #10b981;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      }
+  <div id="camera">
 
-      /* Real News Card */
-      .news-card-real {
-        width: 920px;
-        background: #0f172a;
-        border: 3px solid #ef4444;
-        border-radius: 24px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 20px 60px rgba(239, 68, 68, 0.25);
-      }
-      .news-img-crop {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        object-position: top;
-      }
-      .news-content-pad {
-        padding: 18px 24px;
-        text-align: left;
-      }
-      .news-title-text {
-        font-size: 32px;
-        font-weight: 900;
-        color: #ffffff;
-      }
-      .news-sub-text {
-        font-size: 24px;
-        color: #94a3b8;
-        margin-top: 4px;
-      }
-
-      /* Scene 3: Trap Liquidity Box */
-      .trap-card-clean {
-        width: 920px;
-        background: rgba(30, 41, 59, 0.85);
-        border: 3px solid #ef4444;
-        border-radius: 24px;
-        padding: 30px;
-        margin: 25px 0 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-      }
-      .trap-label { font-size: 26px; color: #f87171; font-weight: 800; letter-spacing: 1px; }
-      .trap-price { font-size: 64px; font-weight: 900; color: #ffffff; margin: 8px 0; }
-      .trap-note { font-size: 26px; color: #cbd5e1; }
-
-      .sent-container {
-        width: 920px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .sent-block {
-        padding: 22px 28px;
-        border-radius: 18px;
-        text-align: left;
-        background: #0f172a;
-        border-left: 8px solid;
-      }
-      .sent-red { border-left-color: #ef4444; }
-      .sent-green { border-left-color: #10b981; }
-      .sent-h { font-size: 32px; font-weight: 900; color: #fff; }
-      .sent-p { font-size: 24px; color: #94a3b8; margin-top: 4px; }
-
-      /* Scene 4: Premium CTA */
-      .cta-box-premium {
-        width: 920px;
-        background: linear-gradient(180deg, #0f172a 0%, #090d16 100%);
-        border: 4px solid #38bdf8;
-        border-radius: 32px;
-        padding: 48px 40px;
-        margin-top: 30px;
-        box-shadow: 0 25px 70px rgba(0,0,0,0.8), 0 0 60px rgba(56, 189, 248, 0.25);
-      }
-      .cta-brand-tag { font-size: 28px; color: #38bdf8; font-weight: 900; letter-spacing: 1.5px; }
-      .cta-head-large { font-size: 64px; font-weight: 900; line-height: 1.15; margin: 20px 0 30px; }
-      .cta-checklist {
-        text-align: left;
-        font-size: 30px;
-        color: #e2e8f0;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin-bottom: 40px;
-      }
-      .cta-btn-smooth {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        padding: 26px;
-        border-radius: 20px;
-        font-size: 44px;
-        font-weight: 900;
-        color: #fff;
-        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
-      }
-
-      /* Fixed Bottom Subtitle HUD */
-      .caption-bar {
-        position: absolute;
-        bottom: 60px;
-        left: 60px;
-        right: 60px;
-        z-index: 60;
-        background: rgba(6, 9, 14, 0.95);
-        border: 2px solid #38bdf8;
-        border-radius: 20px;
-        padding: 22px 30px;
-        min-height: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-      }
-      .caption-text {
-        font-size: 32px;
-        font-weight: 800;
-        line-height: 1.35;
-        text-align: center;
-        color: #ffffff;
-      }
-    </style>
-  </head>
-  <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="41.38"
-      data-width="1080"
-      data-height="1920"
-    >
-      <audio
-        id="a-roll-audio"
-        src="voiceover.mp3"
-        data-start="0"
-        data-duration="41.38"
-        data-track-index="2"
-        data-volume="1"
-      ></audio>
-
-      <div class="ambient-glow glow-green"></div>
-      <div class="ambient-glow glow-red"></div>
-      <div class="ambient-glow glow-blue"></div>
-
-      <div class="hud-header" data-layout-allow-overlap>
-        <div class="hud-brand mono">
-          <div class="live-dot"></div>
-          PHANTOM INTELLIGENCE
-        </div>
-        <div class="pair-pill mono">XAUUSD M5</div>
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- SCENE 1: HOOK (0s – 6s)                               -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div id="scene1" class="scene">
+      <!-- Particles -->
+      <div class="s1-particles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+        <div class="particle" style="width:6px;height:6px;top:12%;left:18%;opacity:0.6;"></div>
+        <div class="particle" style="width:4px;height:4px;top:22%;left:75%;opacity:0.4;"></div>
+        <div class="particle" style="width:8px;height:8px;top:35%;left:88%;opacity:0.5;"></div>
+        <div class="particle" style="width:5px;height:5px;top:65%;left:8%;opacity:0.5;"></div>
+        <div class="particle" style="width:7px;height:7px;top:78%;left:55%;opacity:0.4;"></div>
+        <div class="particle" style="width:4px;height:4px;top:88%;left:30%;opacity:0.6;"></div>
+        <div class="particle" style="width:6px;height:6px;top:48%;left:92%;opacity:0.3;"></div>
+        <div class="particle" style="width:5px;height:5px;top:8%;left:45%;opacity:0.5;"></div>
       </div>
 
-      <!-- CAMERA WRAPPER -->
-      <div id="camera">
-        <!-- SCENE 1: HOOK (0s - 6s) -->
-        <div id="scene-1" class="scene">
-          <div class="hero-title">
-            APA SIH YANG TERJADI<br>
-            <span class="c-gold">HARI INI?</span>
-          </div>
-          <div class="radar-wrapper">
-            <div class="radar-core"></div>
-            <div id="radar-beam" class="radar-sweep"></div>
-          </div>
-          <div class="versus-tags mono">
-            <div id="tag-j" class="tag-j">JUNAM 🔻</div>
-            <div id="tag-f" class="tag-f">FLY 🚀</div>
-          </div>
-        </div>
+      <div class="s1-top-label">MARKET INTEL</div>
+      <div class="s1-title" id="s1-title">APA SIH YANG TERJADI HARI INI?</div>
 
-        <!-- SCENE 2: FLY + REAL CHART + REAL NEWS (6s - 18s) -->
-        <div id="scene-2" class="scene" style="opacity: 0;">
-          <div class="hero-title c-green" style="font-size: 68px; margin-top: 40px;" data-layout-allow-overlap>
-            GOLD FLY +700 PIPS!
-          </div>
-
-          <div class="chart-card-real" data-layout-allow-overflow>
-            <img id="real-chart-img" class="chart-img" src="chart_real.png" alt="Real XAUUSD Chart" data-layout-allow-overflow>
-            <div class="chart-overlay-badge mono">$4,194.30</div>
-          </div>
-
-          <div id="real-news-card" class="news-card-real" data-layout-allow-overlap>
-            <img class="news-img-crop" src="news_real.png" alt="Real Geopolitical News">
-            <div class="news-content-pad">
-              <div class="news-title-text">Tensi Selat Hormuz Memanas!</div>
-              <div class="news-sub-text">Aliran tanker minyak drop 27%, safe-haven demand melompat tajam.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SCENE 3: JEBAKAN PUCUK (18s - 29s) -->
-        <div id="scene-3" class="scene" style="opacity: 0;">
-          <div class="hero-title c-red" style="font-size: 70px;">
-            AWAS JEBAKAN PUCUK!
-          </div>
-
-          <div id="trap-box" class="trap-card-clean">
-            <div class="trap-label mono">LIQUIDITY TARGET CEILING</div>
-            <div class="trap-price mono">4.198 — 4.200</div>
-            <div class="trap-note">Area Sapu Bersih Stop Loss Retail Seller</div>
-          </div>
-
-          <div class="sent-container">
-            <div id="card-sel" class="sent-block sent-red">
-              <div class="sent-h">❌ NICE TRY SELLER!</div>
-              <div class="sent-p">Nekat counter trend langsung terjemput likuidasi.</div>
-            </div>
-            <div id="card-buy" class="sent-block sent-green">
-              <div class="sent-h">✅ SELAMAT BUYER!</div>
-              <div class="sent-p">Disiplin hold dari bawah amankan floating profit.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SCENE 4: CTA FINAL (29s - 41.38s) -->
-        <div id="scene-4" class="scene" style="opacity: 0;">
-          <div id="cta-card" class="cta-box-premium">
-            <div class="cta-brand-tag mono">PHANTOM INTELLIGENCE</div>
-            <div class="cta-head-large">
-              INGIN AI AGENT UNTUK<br>
-              <span class="c-green">ANALISIS REALTIME?</span>
-            </div>
-            <div class="cta-checklist">
-              <div>✓ Pantau likuiditas & sweep 24/7</div>
-              <div>✓ Deteksi news makro global instan</div>
-              <div>✓ Akses teknologi institusi tanpa biaya bulanan</div>
-            </div>
-            <div id="cta-btn" class="cta-btn-smooth">
-              ⚡ AKSES GRATIS DI BIO
-            </div>
-          </div>
+      <div class="radar-wrap" id="radar-wrap">
+        <div class="radar-disc" id="radar-disc">
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-crosshair"></div>
+          <div class="radar-sweep" id="radar-sweep"></div>
+          <div class="radar-dot"></div>
+          <div class="radar-dot"></div>
+          <div class="radar-dot"></div>
+          <div class="radar-center"></div>
         </div>
       </div>
 
-      <div class="caption-bar">
-        <div id="caption" class="caption-text">
-          "Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"
+      <div class="versus-row">
+        <div class="badge badge-down" id="badge-down">JATUH 🔻</div>
+        <div class="vs-text">VS</div>
+        <div class="badge badge-up" id="badge-up">FLY 🚀</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- SCENE 2: MOMENTUM & NEWS (6s – 18s)                   -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div id="scene2" class="scene">
+      <div class="s2-particles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+        <div class="particle" style="width:5px;height:5px;top:10%;left:20%;opacity:0.5;"></div>
+        <div class="particle" style="width:7px;height:7px;top:25%;left:80%;opacity:0.4;"></div>
+        <div class="particle" style="width:4px;height:4px;top:70%;left:12%;opacity:0.5;"></div>
+        <div class="particle" style="width:6px;height:6px;top:85%;left:70%;opacity:0.4;"></div>
+      </div>
+
+      <div class="s2-eyebrow" data-layout-allow-overflow>GOLD ANALYSIS</div>
+      <div class="s2-title" id="s2-title">GOLD FLY <span>+700 PIPS!</span></div>
+
+      <div class="chart-card" id="chart-card" data-layout-allow-overflow>
+        <img src="chart_real.png" alt="XAUUSD TradingView Chart" />
+        <div class="chart-badge" id="chart-badge">$4,194.30</div>
+        <div class="chart-label">XAUUSD · 1H · TradingView</div>
+      </div>
+
+      <div class="news-card" id="news-card" data-layout-allow-overlap data-layout-allow-overflow>
+        <img src="news_real.png" alt="Geopolitical News" />
+        <div class="news-content">
+          <div class="news-tag">⚡ BREAKING</div>
+          <div class="news-headline" data-layout-allow-overlap>Tensi Selat Hormuz Memanas!<br><span>Aliran tanker drop 27%</span></div>
         </div>
       </div>
     </div>
 
-    <script>
-      window.__timelines = window.__timelines || {};
-      const tl = gsap.timeline({ paused: true });
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- SCENE 3: JEBAKAN PUCUK (18s – 29s)                    -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div id="scene3" class="scene">
+      <div class="s3-eyebrow">⚠️ PERINGATAN TRADER</div>
+      <div class="s3-title" id="s3-title">AWAS <span>JEBAKAN PUCUK!</span></div>
 
-      // Multi-Phase Smooth Camera Zoom & Pan (Continuous, Gentle Motion)
-      tl.fromTo("#camera", 
-        { scale: 0.96, y: 10 }, 
-        { scale: 1.10, y: -10, duration: 5.5, ease: "power2.out" }, 0);
+      <div class="resistance-box" id="resistance-box">
+        <div class="resistance-label">🎯 LIQUIDITY TARGET</div>
+        <div class="resistance-value"><span>4,198</span> — <span>4,200</span></div>
+      </div>
 
-      tl.to("#camera", { scale: 1.25, y: 50, duration: 2.2, ease: "power2.inOut" }, 6.0);
-      tl.to("#real-chart-img", { scale: 1.18, x: -50, duration: 4.5, ease: "power2.out" }, 6.2);
+      <div class="s3-cards">
+        <div class="s3-card s3-card-bad" id="s3-card-bad">
+          <div>
+            <span class="s3-card-icon">❌</span>
+            <strong>Nice try seller</strong>
+          </div>
+          <div class="s3-card-sub">Kena sapu likuiditas di zona resistance</div>
+        </div>
+        <div class="s3-card s3-card-good" id="s3-card-good">
+          <div>
+            <span class="s3-card-icon">✅</span>
+            <strong>Selamat buyer</strong>
+          </div>
+          <div class="s3-card-sub">Hold dari bawah — profit terkunci aman</div>
+        </div>
+      </div>
+    </div>
 
-      tl.to("#camera", { scale: 1.04, y: -20, duration: 1.8, ease: "power2.inOut" }, 12.0);
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- SCENE 4: HERO CTA (29s – 41.38s)                      -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- SCENE 4: HERO CTA (29s - 41.38s) -->
+    <div id="scene4" class="scene" style="opacity: 0;">
+      <div id="cta-card" style="width: 980px; background: linear-gradient(180deg, rgba(20, 30, 48, 0.98) 0%, rgba(10, 15, 28, 0.98) 100%); border: 4px solid #38bdf8; border-radius: 40px; padding: 85px 55px; box-shadow: 0 30px 120px rgba(0,0,0,0.95), 0 0 100px rgba(56, 189, 248, 0.35); text-align: center; margin-bottom: 40px;">
+        <div style="display: inline-block; background: rgba(56, 189, 248, 0.15); border: 2px solid #38bdf8; padding: 12px 36px; border-radius: 100px; font-size: 30px; color: #38bdf8; font-weight: 900; letter-spacing: 3px; margin-bottom: 35px;">☠️ PHANTOM INTELLIGENCE</div>
+        <div style="font-size: 76px; font-weight: 900; line-height: 1.15; margin-bottom: 45px; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.8);">INGIN AI AGENT UNTUK<br><span style="color: #10b981;">ANALISIS REALTIME?</span></div>
+        <div style="text-align: left; font-size: 36px; color: #e2e8f0; display: flex; flex-direction: column; gap: 26px; margin-bottom: 60px; background: rgba(15, 23, 42, 0.6); padding: 36px 40px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="display: flex; align-items: center; gap: 16px;"><span style="color: #10b981; font-weight: 900;">✓</span> Pantau likuiditas & sweep 24/7</div>
+          <div style="display: flex; align-items: center; gap: 16px;"><span style="color: #10b981; font-weight: 900;">✓</span> Deteksi news makro global instan</div>
+          <div style="display: flex; align-items: center; gap: 16px;"><span style="color: #10b981; font-weight: 900;">✓</span> Akses institusi tanpa biaya bulanan</div>
+        </div>
+        <div id="cta-button" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 38px 20px; border-radius: 28px; font-size: 52px; font-weight: 900; color: #fff; box-shadow: 0 20px 50px rgba(16, 185, 129, 0.5); letter-spacing: 1.5px;">⚡ AKSES GRATIS DI BIO</div>
+      </div>
+    </div>
+  </div><!-- /#camera -->
 
-      tl.to("#camera", { scale: 1.18, y: 40, duration: 2.0, ease: "power2.out" }, 18.0);
-      tl.to("#camera", { scale: 1.0, y: 0, duration: 1.5, ease: "power2.inOut" }, 23.5);
+  <!-- FIXED BOTTOM CAPTION HUD -->
+  <div id="caption-bar" style="position: absolute; bottom: 55px; left: 60px; right: 60px; z-index: 60; background: rgba(4, 7, 12, 0.95); border: 2px solid #38bdf8; border-radius: 22px; padding: 22px 32px; min-height: 125px; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 50px rgba(0,0,0,0.9);">
+    <div id="caption" style="font-size: 34px; font-weight: 800; line-height: 1.35; text-align: center; color: #ffffff;">"Apa sih yang terjadi hari ini? Gold gimana, junam atau fly? Terus ada berita apa sih?"</div>
+  </div>
+</div><!-- /#root -->
 
-      tl.to("#camera", { scale: 1.08, y: -10, duration: 3.5, ease: "power2.out" }, 29.0);
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({ paused: true });
 
-      // Scene 1 Choreography
-      tl.to("#radar-beam", { rotation: 720, duration: 6, ease: "none" }, 0);
-      tl.from("#tag-j", { y: 25, opacity: 0, duration: 0.8, ease: "power2.out" }, 1.5);
-      tl.from("#tag-f", { y: 25, opacity: 0, duration: 0.8, ease: "power2.out" }, 1.8);
+// ─── SMOOTH MULTI-PHASE CAMERA MOTION (0s - 41.38s) ───
+// Phase 1 (0s - 6s): Approach Zoom In (0.96 -> 1.08)
+tl.fromTo("#camera", 
+  { scale: 0.96, y: 15 }, 
+  { scale: 1.08, y: -10, duration: 5.5, ease: "power2.out" }, 0);
 
-      tl.to("#scene-1", { opacity: 0, scale: 0.92, duration: 0.5, ease: "power2.in" }, 5.5);
-      tl.call(() => {
-        document.getElementById("caption").innerText = "Gold fly 700 pips tanpa retrace semalam, langsung nyentuh 4194. Lihat tuh ada news: Tensi Selat Hormuz memanas lagi, aliran tanker minyak drop 27%.";
-      }, null, 5.8);
+// Phase 2 (6s - 12s): Deep Focus Zoom In to Real Chart (1.08 -> 1.25)
+tl.to("#camera", { scale: 1.18, y: 30, duration: 2.2, ease: "power3.inOut" }, 6.0);
 
-      // Scene 2 Choreography
-      tl.to("#scene-2", { opacity: 1, duration: 0.5 }, 6.0);
-      tl.from(".chart-card-real", { scale: 0.9, opacity: 0, duration: 0.9, ease: "power2.out" }, 6.1);
-      tl.from("#real-news-card", { y: 80, opacity: 0, duration: 1.0, ease: "power2.out" }, 11.5);
+// Phase 3 (12s - 18s): Pullback Pan to Reveal Real News Card (1.25 -> 1.05)
+tl.to("#camera", { scale: 1.05, y: -30, duration: 2.0, ease: "power3.inOut" }, 12.0);
 
-      tl.to("#scene-2", { opacity: 0, scale: 1.06, duration: 0.5, ease: "power2.in" }, 17.5);
-      tl.call(() => {
-        document.getElementById("caption").innerText = "Hati-hati jebakan pucuk di area 4198 sampai 4200. Nice try seller yang nekat counter trend, selamat buyer yang hold dari bawah.";
-      }, null, 17.8);
+// Phase 4 (18s - 24s): Zoom into Liquidity Ceiling (1.05 -> 1.20)
+tl.to("#camera", { scale: 1.20, y: 60, duration: 2.0, ease: "power3.out" }, 18.0);
+tl.to("#camera", { scale: 1.0, y: 0, duration: 1.5, ease: "power2.inOut" }, 23.5);
 
-      // Scene 3 Choreography
-      tl.to("#scene-3", { opacity: 1, duration: 0.5 }, 18.0);
-      tl.from("#trap-box", { scale: 0.9, opacity: 0, duration: 0.8, ease: "power2.out" }, 18.2);
-      tl.from("#card-sel", { x: -60, opacity: 0, duration: 0.7, ease: "power2.out" }, 21.0);
-      tl.from("#card-buy", { x: 60, opacity: 0, duration: 0.7, ease: "power2.out" }, 23.5);
+// Phase 5 (29s - 41.38s): Final Climax Hero Push (0.94 -> 1.08)
+tl.to("#camera", { scale: 1.08, y: -10, duration: 3.5, ease: "power3.out" }, 29.0);
 
-      tl.to("#scene-3", { opacity: 0, y: -30, duration: 0.5, ease: "power2.in" }, 28.5);
-      tl.call(() => {
-        document.getElementById("caption").innerText = "Ingin AI agent untuk analisis realtime? Akses gratis di bio.";
-      }, null, 28.8);
+// ─── SCENE CHOREOGRAPHY ───
+// Scene 1 (Hook)
+tl.to("#radar-sweep", { rotation: 720, duration: 6, ease: "none" }, 0);
+tl.from("#badge-down", { y: 30, opacity: 0, duration: 0.8, ease: "power2.out" }, 1.5);
+tl.from("#badge-up", { y: 30, opacity: 0, duration: 0.8, ease: "power2.out" }, 1.8);
+tl.to("#scene1", { opacity: 0, scale: 0.90, duration: 0.5, ease: "power2.in" }, 5.5);
 
-      // Scene 4 Choreography
-      tl.to("#scene-4", { opacity: 1, duration: 0.5 }, 29.0);
-      tl.from("#cta-card", { scale: 0.88, opacity: 0, duration: 0.9, ease: "power2.out" }, 29.2);
-      tl.fromTo("#cta-btn", 
-        { scale: 0.98 }, 
-        { scale: 1.03, repeat: 7, yoyo: true, duration: 0.9, ease: "sine.inOut" }, 30.5);
+tl.call(() => {
+  document.getElementById("caption").innerText = "Gold fly 700 pips tanpa retrace semalam, langsung nyentuh 4194. Lihat tuh ada news: Tensi Selat Hormuz memanas lagi, aliran tanker minyak drop 27%.";
+}, null, 5.8);
 
-      window.__timelines["main"] = tl;
-    </script>
-  </body>
+// Scene 2 (Fly & News)
+tl.to("#scene2", { opacity: 1, duration: 0.5 }, 6.0);
+tl.from("#chart-card", { scale: 0.88, opacity: 0, duration: 0.9, ease: "power3.out" }, 6.1);
+tl.from("#news-card", { y: 50, opacity: 0, duration: 0.9, ease: "power3.out" }, 7.2);
+tl.to("#scene2", { opacity: 0, scale: 1.08, duration: 0.5, ease: "power2.in" }, 17.5);
+
+tl.call(() => {
+  document.getElementById("caption").innerText = "Hati-hati jebakan pucuk di area 4198 sampai 4200. Nice try seller yang nekat counter trend, selamat buyer yang hold dari bawah.";
+}, null, 17.8);
+
+// Scene 3 (Trap)
+tl.to("#scene3", { opacity: 1, duration: 0.5 }, 18.0);
+tl.from("#resistance-box", { scale: 0.88, opacity: 0, duration: 0.8, ease: "power3.out" }, 18.2);
+tl.from("#s3-card-bad", { x: -60, opacity: 0, duration: 0.7, ease: "power3.out" }, 21.0);
+tl.from("#s3-card-good", { x: 60, opacity: 0, duration: 0.7, ease: "power3.out" }, 23.5);
+tl.to("#scene3", { opacity: 0, y: -30, duration: 0.5, ease: "power2.in" }, 28.5);
+
+tl.call(() => {
+  document.getElementById("caption").innerText = "Ingin AI agent untuk analisis realtime? Akses gratis di bio.";
+}, null, 28.8);
+
+// Scene 4 (CTA)
+tl.to("#scene4", { opacity: 1, duration: 0.5 }, 29.0);
+tl.from("#cta-card", { scale: 0.85, opacity: 0, duration: 1.0, ease: "power3.out" }, 29.2);
+tl.fromTo("#cta-button", 
+  { scale: 0.98 }, 
+  { scale: 1.03, repeat: 7, yoyo: true, duration: 0.9, ease: "sine.inOut" }, 30.5);
+
+window.__timelines["main"] = tl;
+</script>
+</body>
 </html>
